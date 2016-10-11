@@ -6,11 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 public class Client {
 
-	private static final String ADDRESS = "localhost";//"10.1.1.109";
+	private static final String ADDRESS = "10.1.1.109";//"10.1.1.109";
 	private static final String EXIT = "exit";
 
 	public static void main(String[] args) {
@@ -28,7 +27,7 @@ public class Client {
 			output.write("Hello there friend!\n");
 			output.flush();
 
-			while (true) {
+			while (!connection.isClosed()) {
 				
 				System.out.println("Server responded --> " + input.readLine());
 
@@ -36,13 +35,15 @@ public class Client {
 
 				String message = consoleInput.readLine();
 				
-				if(!EXIT.equals(message)) {				
+				if(!EXIT.equals(message)) {
+					System.out.println("Sending message");
 					output.write(message + "\n");
 					output.flush();
 				}
 				else
-					System.exit(0);
-				
+					output.write("Goodbye!");
+					output.flush();
+					output.close();
 			}
 
 		} catch (Exception e) {
